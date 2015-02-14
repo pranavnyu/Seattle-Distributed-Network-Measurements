@@ -5,7 +5,7 @@ link followed : https://docs.python.org/2/library/subprocess.html#module-subproc
 import subprocess
 import shlex
 
-NAME_SERVER_IP ="@8.8.8.8"
+NAME_SERVER_IP ="@8.8.8.8" #it is the server to be queried by default
 
 DNSlookup = 'dig NAME_SERVER_IP FQDN' #DNS Lookups for Fully qualified domain Name
 FQDN = raw_input("enter the ip address you want to apply dig on : ")
