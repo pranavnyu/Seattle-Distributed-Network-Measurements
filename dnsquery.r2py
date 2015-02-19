@@ -1,0 +1,55 @@
+'''
+this provides DNS NS query (similarly like 'dig' command in linux/mac)
+it uses dnscommon.r2py library from Seattle Project.
+'''
+
+'''
+
+when used dig command to find NS in terminal:
+command : dig abcxyz.com NS +noall +answer
+output :
+		{
+		; <<>> DiG 9.8.3-P1 <<>> abcxyz.com NS +noall +answer
+		;; global options: +cmd
+		abcxyz.com.		14400	IN	NS	ns2.abcxyz.net.
+		abcxyz.com.		14400	IN	NS	ns1.abcxyz.net.
+		}
+
+
+output of the desired function should be in a tuple consisting all the name servers ie. :
+
+['ns2.mediatemple.net','ns1.mediatemple.net']
+
+'''
+'''
+import socket thing***
+****specific server I want to query
+****dylink.r2py
+****construct messages, doesn't include functionality to send and receive messages....
+'''
+
+
+'''
+Implement a function to query a name server for the INTERNET-class A record of a FQDN, and return the reply in a `tuple`, as Python's `socket.gethostbyname_ex` does.
+
+`dnsquery.gethostbyname_ex(name)`
+Use `dnscommon` to construct the UDP datagram contents, and add code to your function to send the query and receive the reply. Write your code so as to use a global definition, NAME_SERVER_IP="8.8.8.8", which is the server to be queried per default. Compare your results with `dig @8.8.8.8 FQDN`.
+
+Questions:
+* What happens if an unresolvable name is provided?
+* What if the default name server IP points to an address not running a name server?
+* What if the default name server IP is invalid?
+* What should happen?
+
+
+https://docs.python.org/release/2.5.2/lib/socket-example.html
+
+'''
+
+#there is a dictionary called _type_lookup_table that consists all types of lookups
+
+
+#there is a function convert_packet_to_dictionary that converts all the packets and 
+#and saves packet in packet_dict = {}
+
+
