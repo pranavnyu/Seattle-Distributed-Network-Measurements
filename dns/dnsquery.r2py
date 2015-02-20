@@ -1,0 +1,75 @@
+"""
+<Program Name>
+  dnsquery.repy
+
+<Date Created>
+  February 20, 2010
+
+<Author(s)>
+  Pranav Raj Tyagi
+  pt992@nyu.edu
+
+<Major Edits>
+  None
+
+<Purpose>
+  Implements a function to query a name server for the INTERNET-class A recordof a FQDN
+  and replies in a 'tuple'
+
+<Notes>
+  ------------
+"""
+
+refuse_ips = []
+
+include dnscommon.repy
+
+def dns_open_connection(client_ip,client_port,destip, destport, timeout):
+	'''
+	checks whether client is in blacklist or Not
+	if client is normal then then opens up a connection between destiantion and localport
+	'''
+	if client_ip in refuse_ips:
+		return False
+	else:
+		try:
+			openconnection(destip, destport, client_ip, client_port, timeout)
+			return True
+  		except Exception:
+  			return False
+
+def gethostbyname(client_ip,client_port,destip, destport, timeout,dns_packet_data):
+	'''
+
+
+	'''
+	conn = dns_open_connection(client_ip,client_port,destip, destport, client_ip, client_port, timeout)
+	if conn is True:
+		packet_dict = convert_packet_to_dictionary(dns_packet_data)
+		packet_dict['remote_ip'] = client_ip
+   		packet_dict['remote_port'] = client_port
+   		
+   		answers = packet_dict['answers']['answer_data']
+   		ans_address = []
+   		for item in range(answers):
+   			ans_address.append(item)
+   		return ans_address
+   	else:
+   		return
+
+ 		
+		
+    		
+    
+
+
+
+
+
+
+
+
+
+
+
+
