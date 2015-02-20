@@ -22,7 +22,7 @@
 
 refuse_ips = []
 
-include dnscommon.repy
+include dnscommon.r2py
 
 def dns_open_connection(client_ip,client_port,destip, destport, timeout):
 	'''
