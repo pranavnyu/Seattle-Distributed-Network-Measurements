@@ -17,6 +17,15 @@
   and replies in a 'tuple'
 
 <Notes>
+  Implement a function to query a name server for the INTERNET-class A record of a FQDN, 
+  and return the reply in a `tuple`, as Python's `socket.gethostbyname_ex` does.
+    
+  `dnsquery.gethostbyname_ex(name)`
+  Use `dnscommon` to construct the UDP datagram contents, 
+  and add code to your function to send the query and receive the reply. 
+  Write your code so as to use a global definition, NAME_SERVER_IP="8.8.8.8", 
+  which is the server to be queried per default. Compare your results with `dig @8.8.8.8 FQDN`.
+
   ------------
 """
 
