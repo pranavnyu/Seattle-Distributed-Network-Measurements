@@ -20,42 +20,25 @@
   ------------
 """
 
-refuse_ips = []
+#imports dnscommon.r2py file from repyv2 library using dylink.r2py
+dnscommon = dy_import_module("dnscommon.r2py")
 
-dy_import_module_symbols("dnscommon.r2py")
+def dns_connection(client_ip,client_port,destip, destport, timeout,dns_packet_data):
+  '''
 
-def dns_open_connection(client_ip,client_port,destip, destport, timeout):
-	'''
-	checks whether client is in blacklist or Not
-	if client is normal then then opens up a connection between destiantion and localport
-	'''
-	if client_ip in refuse_ips:
-		return False
-	else:
-		try:
-			openconnection(destip, destport, client_ip, client_port, timeout)
-			return True
-  		except Exception:
-  			return False
-
-def gethostbyname(client_ip,client_port,destip, destport, timeout,dns_packet_data):
-	'''
-
-
-	'''
-	conn = dns_open_connection(client_ip,client_port,destip, destport, client_ip, client_port, timeout)
-	if conn is True:
-		packet_dict = convert_packet_to_dictionary(dns_packet_data)
-		packet_dict['remote_ip'] = client_ip
-   		packet_dict['remote_port'] = client_port
-   		
-   		answers = packet_dict['answers']['answer_data']
-   		ans_address = []
-   		for item in range(answers):
-   			ans_address.append(item)
-   		return ans_address
-   	else:
-   		return
+  '''
+  conn = dns_open_connection(client_ip,client_port,destip, destport, client_ip, client_port, timeout)
+  if conn is True:
+    packet_dict = dnscoomon.convert_packet_to_dictionary(dns_packet_data)
+    packet_dict['remote_ip'] = client_ip
+    packet_dict['remote_port'] = client_port
+   	answers = packet_dict['answers']['answer_data']
+    ans_address = []
+    for item in range(answers):
+      ans_address.append(item)
+      gethostbyname_ex(ans_address)
+    else:
+      return False
 
  		
 		
