@@ -34,13 +34,14 @@ dnscommon = dy_import_module("dnscommon.r2py")
 
 def dns_connection(client_ip,client_port,destip, destport, timeout,dns_packet_data):
   '''
-
-  '''
   conn = openconn(desthost, destport, localip=None, localport=0, timeout = 5)
   sendmess(desthost, destport, message, localip=None, localport=None)
   recvmess(localip, localport, function)
   gethostbyname_ex(name)
   stopcomm(commhandle)
+
+  '''
+
   if conn is True:
     packet_dict = dnscommon.convert_packet_to_dictionary(dns_packet_data)
     packet_dict['remote_ip'] = client_ip
