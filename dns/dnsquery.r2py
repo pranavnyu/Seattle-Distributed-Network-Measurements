@@ -89,6 +89,8 @@ def dns_connection(client_ip,client_port,destip, destport, timeout ,dns_dictiona
     sendmess(desthost, destport, converted_packet, localip=None, localport=None)
 
     commhandle = recvmess(localip, localport, _message_received)
+
+    return commhandle
     
 def _message_received(client_ip, client_port, dns_packet_data, 
                                   connhandle):
