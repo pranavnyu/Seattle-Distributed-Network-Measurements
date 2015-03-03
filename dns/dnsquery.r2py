@@ -93,7 +93,9 @@ def _message_received(client_ip, client_port, converted_packet,
                                   connhandle):
   packet_dict = _process_query(client_ip, client_port, converted_packet, 
                                    connhandle)
-  sendmess(client_ip, client_port, packet_dict, localip=None, localport=None)
+
+  if packet_dict != None:
+    sendmess(client_ip, client_port, packet_dict, localip=None, localport=None)
 
 
 def _process_query(client_ip, client_port, converted_packet, connhandle):
