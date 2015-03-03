@@ -85,23 +85,18 @@ def dns_connection(client_ip,client_port,destip, destport, timeout ,dns_dictiona
     
     sendmess(desthost, destport, converted_packet, localip=None, localport=None)
 
-    commhandle = recvmess(localip, localport, _message_received)
+    commhandle = recvmess(localip, localport, _process_query)
 
     return commhandle
     
-def _message_received(client_ip, client_port, dns_packet_data, 
-                                  connhandle):
-  packet_dict = _process_query(client_ip, client_port, dns_query_data, 
-                                   connhandle)
 
-  
-
-
-def _process_query(client_ip, client_port, dns_query_data, connhandle):
-  packet_dict = dnscommon.convert_packet_to_dictionary(dns_packet_data)
+def _process_query(client_ip, client_port, converted_packet, connhandle):
+  packet_dict = dnscommon.convert_packet_to_dictionary(converted_packet)
   packet_dict['remote_ip'] = client_ip
   packet_dict['remote_port'] = client_port
   return packet_dict
+
+  
 
 
 
