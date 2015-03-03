@@ -33,7 +33,7 @@
 dnscommon = dy_import_module("dnscommon.r2py")
 
 
-def dns_connection(client_ip,client_port,destip, destport, timeout ,dns_dictionary):
+def dns_connection(client_ip,client_port,destip, destport ,dns_dictionary):
   '''
  <Arguments>
     dns_dictionary
@@ -79,13 +79,13 @@ def dns_connection(client_ip,client_port,destip, destport, timeout ,dns_dictiona
 
 
   '''
-  conn = openconn(desthost, destport, localip=None, localport=0, timeout = 5)
+  conn = openconn(desthost, destport, client_ip, client_port, timeout = 5)
   if conn is True:
     converted_packet = convert_dictionary_to_packet(dns_dictionary)
     
-    sendmess(desthost, destport, converted_packet, localip=None, localport=None)
+    sendmess(desthost, destport, converted_packet, client_ip, client_port)
 
-    commhandle = recvmess(localip, localport, _message_received)
+    commhandle = recvmess(client_ip, client_port , _message_received)
 
     return commhandle
     
@@ -95,7 +95,7 @@ def _message_received(client_ip, client_port, converted_packet,
                                    connhandle)
 
   if packet_dict != None:
-    sendmess(client_ip, client_port, packet_dict, localip=None, localport=None)
+    sendmess(client_ip, client_port, packet_dict)
 
 
 def _process_query(client_ip, client_port, converted_packet, connhandle):
