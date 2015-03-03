@@ -79,15 +79,14 @@ def dns_connection(client_ip,client_port,destip, destport ,dns_dictionary):
 
 
   '''
-  conn = openconn(desthost, destport, client_ip, client_port, timeout = 5)
-  if conn is True:
-    converted_packet = convert_dictionary_to_packet(dns_dictionary)
+
+  converted_packet = convert_dictionary_to_packet(dns_dictionary)
     
-    sendmess(desthost, destport, converted_packet, client_ip, client_port)
+  sendmess(desthost, destport, converted_packet, client_ip, client_port)
 
-    commhandle = recvmess(client_ip, client_port , _message_received)
+  commhandle = recvmess(client_ip, client_port , _message_received)
 
-    return commhandle
+  return commhandle
     
 def _message_received(client_ip, client_port, converted_packet, 
                                   connhandle):
