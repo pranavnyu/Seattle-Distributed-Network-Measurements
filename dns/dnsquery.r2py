@@ -31,9 +31,6 @@
 
 #imports dnscommon.r2py file from repyv2 library using dylink.r2py
 dnscommon = dy_import_module("dnscommon.r2py")
-dnsserver = dy_import_module("dnsserver.r2py")
-
-NAME_SERVER_IP="@8.8.8.8"
 
 
 def dns_connection(client_ip,client_port,destip, destport, timeout ,dns_dictionary):
@@ -96,6 +93,7 @@ def _message_received(client_ip, client_port, dns_packet_data,
                                   connhandle):
   packet_dict = _process_query(client_ip, client_port, dns_query_data, 
                                    connhandle)
+
   
 
 
