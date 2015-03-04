@@ -84,7 +84,7 @@ def dns_connection(client_ip,client_port,destip, destport ,dns_dictionary):
 
   converted_packet = convert_dictionary_to_packet(dns_dictionary)
     
-  sendmess(desthost, destport, converted_packet, client_ip, client_port)
+  sendmessage(desthost, destport, converted_packet, client_ip, client_port)
   
   try:
     commhandle = libsocket.recvmess(client_ip, client_port , _message_received)
@@ -100,7 +100,7 @@ def _message_received(client_ip, client_port, converted_packet,
                                    connhandle)
 
   if packet_dict != None:
-    sendmess(client_ip, client_port, packet_dict)
+    sendmessage(client_ip, client_port, packet_dict)
 
 
 def _process_query(client_ip, client_port, converted_packet, connhandle):
