@@ -1,4 +1,4 @@
 def dns_test():
-  packet_dict = dnsquery.gethostbyname_ex("google.com")
-  log("packet_dict")
-  return packet_dict
+  output = dnsquery.gethostbyname_ex("google.com")
+  log("output")
+  return output
