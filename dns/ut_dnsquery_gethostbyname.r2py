@@ -1,3 +1,8 @@
+from repyportability import *
+add_dy_support(locals())
+
+dnsquery = dy_import_module("dnsquery.r2py")
+
 def dns_test():
   output = dnsquery.gethostbyname_ex("google.com")
   log("output")
