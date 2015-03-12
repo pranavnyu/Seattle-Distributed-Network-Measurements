@@ -86,12 +86,11 @@ def dns_connection(client_ip,client_port,destip, destport ,dns_dictionary):
     
   sendmessage(desthost, destport, converted_packet, client_ip, client_port)
   
-  try:
-    commhandle = libsocket.recvmess(client_ip, client_port , _message_received)
+  
+  commhandle = libsocket.recvmess(client_ip, client_port , _message_received)
 
-    packet_dict = _message_received(client_ip, client_port, converted_packet, 
-                                  connhandle)
-
+  packet_dict = _message_received(client_ip, client_port, converted_packet,connhandle)
+  
   return commhandle, packet_dict
     
 def _message_received(client_ip, client_port, converted_packet, 
