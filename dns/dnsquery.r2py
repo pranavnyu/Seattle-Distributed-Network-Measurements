@@ -36,131 +36,33 @@ libsocket = dy_import_module("librepysocket.r2py")
 NAME_SERVER_IP="@8.8.8.8"
 
 def dns_connection(client_ip,client_port,destip, destport ,dns_dictionary):
-  '''
- <Arguments>
-    dns_dictionary
-      A formatted dictionary describing a DNS packet of the followin form:
-
-  {
-    'raw_data':           <long string> (network raw)
-    'remote_ip':          string (formatted unicode, IP Address)
-    'remote_port':        integer
-    'communication_id'         string (network raw)
-    'query_response'           boolean
-    'operation_code'           integer
-    'authority_advisory'       boolean
-    'truncation'               boolean
-    'recursion_desired'        boolean
-    'recursion_accepted'       boolean
-    'z'                        boolean
-    'authentic_data'           boolean
-    'checking_disabled'        boolean
-    'error_code'               integer (4 bit)
-    'question_count'           integer (16 bit)
-    'answer_count'             integer (16 bit)
-    'authority_record_count'   integer (16 bit)
-    'additional_record_count'  integer (16 bit)   )
-    'questions': array of dictionaries containing:
-        'name'                  string (formatted unicode, IP Address)
-        'type'                  string (formatted unicode, eg A, AAAA, MX)
-        'class'                 string (formatted unicode, eg IN, HE, CH)
-    'answers': array of dictionaries containing:
-        'name'                  string (formatted unicode, IP Address)
-        'type'                  string (formatted unicode, eg A, AAAA, MX)
-        'class'                 string (formatted unicode, eg IN, HE, CH)
-        'time_to_live'          integer (seconds, 32 bit)
-        'answer_data'           string (formatted unicode, RR format)
-                                                   Note that the length and
-                                                   format of this field
-                                                   will vary based on the
-                                                   type of the answer RR.
-                                                   This will be *exactly*
-                                                   the return data from
-                                                   the DHT server.
-  }
-
-
-  '''
 
   converted_packet = convert_dictionary_to_packet(dns_dictionary)
     
   sendmessage(desthost, destport, converted_packet, client_ip, client_port)
-  
+
   packet_dict = {}
-  commhandle = ''
 
   try:
     commhandle = libsocket.recvmess(client_ip, client_port , _message_received)
 
-    packet_dict = _message_received(client_ip, client_port, converted_packet,connhandle)
+    packet_dict = _message_received(client_ip, client_port, converted_packet,commhandle)
+  finally:
+    return  packet_dict
 
-
-  
-  return commhandle, packet_dict
-    
 def _message_received(client_ip, client_port, converted_packet, 
-                                  connhandle):
+                                  commhandle):
   packet_dict = _process_query(client_ip, client_port, converted_packet, 
-                                   connhandle)
+                                   commhandle)
 
   if packet_dict != None:
     sendmessage(client_ip, client_port, packet_dict)
+  
+  return packet_dict
 
 
-def _process_query(client_ip, client_port, converted_packet, connhandle):
-  """
-  <Returns>
-    packet_dict:
-    A dictionary with the following form:
+def _process_query(client_ip, client_port, converted_packet, commhandle):
 
-  {
-    'raw_data':                <long string> (network raw)
-    'remote_ip':               string (formatted unicode, IP Address)
-    'remote_port':             integer
-    'communication_id'         string (network raw)
-    'query_response'           boolean
-    'operation_code'           integer
-    'authority_advisory'       boolean
-    'truncation'               boolean
-    'recursion_desired'        boolean
-    'recursion_accepted'       boolean
-    'z'                        boolean
-    'authentic_data'           boolean
-    'checking_disabled'        boolean
-    'error_code'               integer (4 bit)
-    'question_count'           integer (16 bit)
-    'answer_count'             integer (16 bit)
-    'authority_record_count'   integer (16 bit)
-    'additional_record_count'  integer (16 bit)   )
-    'questions': array of dictionaries containing:
-    'name'                  string (formatted unicode, IP Address)
-    'type'                  string (formatted unicode, eg A, AAAA, MX)
-    'class'                 string (formatted unicode, eg IN, HE, CH)
-    'answers': array of dictionaries containing:
-    'name'                  string (formatted unicode, IP Address)
-        'type'                  string (formatted unicode, eg A, AAAA, MX)
-        'class'                 string (formatted unicode, eg IN, HE, CH)
-        'time_to_live'          integer (seconds, 32 bit)
-        'answer_data'           dictionary (format based on type)
-
-  }
-
-    The 'answer_data' dictionary field can have various formats. Here are the
-    three which are currently supported:
-    SOA:
-      'mname' <IP>
-      'rname' <IP>
-      'serial' <32 bit int>
-      'refresh' <32 bit int>
-      'retry' <32 bit int>
-      'expire' <32 bit int>
-      'minimum' <32 bit int>
-    NS:
-      'address' <Domain Name>
-    A:
-      'address' <IP>
-
-  """
   packet_dict = dnscommon.convert_packet_to_dictionary(converted_packet)
   packet_dict['remote_ip'] = client_ip
   packet_dict['remote_port'] = client_port
@@ -169,22 +71,12 @@ def _process_query(client_ip, client_port, converted_packet, connhandle):
 def gethostbyname_ex(client_ip,client_port,destip, destport ,dns_dictionary):
   dns_dictionary['remote_ip']=client_ip
   dns_dictionary['remote_port']=client_port
-  commhandle, packet_dict = dns_connection(client_ip,client_port,destip, destport ,dns_dictionary)
-
+  
+  packet_dict = dns_connection(client_ip,client_port,destip, destport ,dns_dictionary)
+  
   answers = packet_dict['answers']['answer_data']
   ans_address = []
   for item in range(answers):
     ans_address.append(item)
   return ans_address
-
-
-
-
-
-
-
-
-
-
-
 
