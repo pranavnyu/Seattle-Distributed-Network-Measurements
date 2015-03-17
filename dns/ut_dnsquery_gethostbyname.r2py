@@ -2,8 +2,13 @@ from repyportability import *
 add_dy_support(locals())
 
 dnsquery = dy_import_module("dnsquery.r2py")
+libsocket = dy_import_module("librepysocket.r2py")
 
-def dns_test():
-  output = dnsquery.gethostbyname_ex("google.com")
-  log("output")
-  return output
+
+listen_ip = getmyip()
+listen_port = libsocket.get_messports(listen_ip)[0]
+destip = "google.com"
+destport = 80
+dns_dictionary = "test_dnsquery"
+output = dnsquery.gethostbyname_ex(listen_ip,listen_port,destip, destport ,dns_dictionary)
+log(output)
