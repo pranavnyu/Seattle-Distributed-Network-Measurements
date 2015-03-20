@@ -35,9 +35,9 @@ libsocket = dy_import_module("librepysocket.r2py")
 
 NAME_SERVER_IP="@8.8.8.8"
 
-def dns_connection(client_ip,client_port,destip, destport ,dns_dictionary):
+def dns_connection(client_ip,client_port,destip, destport ,dns_query_data):
 
-  converted_packet = convert_dictionary_to_packet(dns_dictionary)
+  converted_packet = dnscommon.convert_packet_to_dictionary(dns_query_data)
     
   sendmessage(desthost, destport, converted_packet, client_ip, client_port)
 
@@ -63,17 +63,20 @@ def _message_received(client_ip, client_port, converted_packet,
 
 def _process_query(client_ip, client_port, converted_packet, commhandle):
 
-  packet_dict = dnscommon.convert_packet_to_dictionary(converted_packet)
+  packet_dict = dnscommon.convert_dictionary_to_packet(converted_packet)
   packet_dict['remote_ip'] = client_ip
   packet_dict['remote_port'] = client_port
   return packet_dict
 
-def gethostbyname_ex(client_ip,client_port,destip, destport ,dns_dictionary):
-  dns_dictionary['remote_ip']=client_ip
-  dns_dictionary['remote_port']=client_port
+def gethostbyname_ex(dns_query_data):
+  client_ip = getmyip()
+  client_port = libsocket.get_messports(client_ip)[0]
   
-  packet_dict = dns_connection(client_ip,client_port,destip, destport ,dns_dictionary)
-  
+  destip = gethostbyname(dns_query_data)
+  #destip = int(hostip)
+  destport = 80
+
+  packet_dict = dns_connection(client_ip,client_port,destip, destport ,dns_query_data)
   answers = packet_dict['answers']['answer_data']
   ans_address = []
   for item in range(answers):

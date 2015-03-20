@@ -5,10 +5,6 @@ dnsquery = dy_import_module("dnsquery.r2py")
 libsocket = dy_import_module("librepysocket.r2py")
 
 
-listen_ip = getmyip()
-listen_port = libsocket.get_messports(listen_ip)[0]
-destip = "google.com"
-destport = 80
-dns_dictionary = "test_dnsquery"
-output = dnsquery.gethostbyname_ex(listen_ip,listen_port,destip, destport ,dns_dictionary)
+dns_query_data = "google.com"
+output = dnsquery.gethostbyname_ex(dns_query_data)
 log(output)
