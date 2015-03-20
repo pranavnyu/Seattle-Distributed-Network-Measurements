@@ -37,7 +37,7 @@ NAME_SERVER_IP="@8.8.8.8"
 
 def dns_connection(client_ip,client_port,destip, destport ,dns_query_data):
 
-  converted_packet = dnscommon.convert_packet_to_dictionary(dns_query_data)
+  converted_packet = dnscommon.convert_dictionary_to_packet(dns_query_data)
     
   sendmessage(desthost, destport, converted_packet, client_ip, client_port)
 
@@ -63,7 +63,7 @@ def _message_received(client_ip, client_port, converted_packet,
 
 def _process_query(client_ip, client_port, converted_packet, commhandle):
 
-  packet_dict = dnscommon.convert_dictionary_to_packet(converted_packet)
+  packet_dict = dnscommon.convert_packet_to_dictionary(converted_packet)
   packet_dict['remote_ip'] = client_ip
   packet_dict['remote_port'] = client_port
   return packet_dict
