@@ -71,8 +71,8 @@ def _process_query(client_ip, client_port, converted_packet, commhandle):
 def gethostbyname_ex(dns_query_data):
   client_ip = getmyip()
   client_port = libsocket.get_messports(client_ip)[0]
-  
-  destip = gethostbyname(dns_query_data)
+  name = dns_query_data['name']
+  destip = gethostbyname(name)
   #destip = int(hostip)
   destport = 80
 
