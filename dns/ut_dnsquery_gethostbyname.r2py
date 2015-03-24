@@ -5,7 +5,7 @@ dnsquery = dy_import_module("dnsquery.r2py")
 libsocket = dy_import_module("librepysocket.r2py")
 
 
-dns_query_data = {'name' : 'google.com'}
+dns_query_data = 'google.com'
 
 output = dnsquery.gethostbyname_ex(dns_query_data)
 log(output)
