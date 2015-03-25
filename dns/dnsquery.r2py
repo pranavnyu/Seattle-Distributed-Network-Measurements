@@ -86,7 +86,7 @@ def _message_received(client_ip, client_port, converted_packet,
 
 def _process_query(client_ip, client_port, converted_packet, commhandle):
 
-  packet_dict = dnscommon.convert_dictionary_to_packet(converted_packet)
+  packet_dict = dnscommon.convert_packet_to_dictionary(converted_packet)
   packet_dict['remote_ip'] = client_ip
   packet_dict['remote_port'] = client_port
   return packet_dict
@@ -100,6 +100,7 @@ def gethostbyname_ex(dns_query_data):
   destip = listen_ip
   destport = listen_port
   
+  #query data needs to create a simple dictionary
   query_data = {}
   query_data['name'] = dns_query_data
   query_data['type'] = 'A'
