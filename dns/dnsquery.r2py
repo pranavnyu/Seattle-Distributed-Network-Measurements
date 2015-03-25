@@ -54,8 +54,6 @@ default_flags = {
                  'answers': []
                 }
 
-checking_disabledcd
-
 def dns_connection(client_ip,client_port,destip, destport ,query_data):
 
   log(query_data)

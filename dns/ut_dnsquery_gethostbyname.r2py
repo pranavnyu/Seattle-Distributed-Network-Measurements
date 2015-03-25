@@ -1,12 +1,10 @@
-from repyportability import *
-add_dy_support(locals())
+#pragma repy restrictions.default dylink.r2py
 
 dnsquery = dy_import_module("dnsquery.r2py")
-libsocket = dy_import_module("librepysocket.r2py")
 
+def data():
+  dns_query_data = 'google.com'
+  output = dnsquery.gethostbyname_ex(dns_query_data)
+  log(output)
 
-dns_query_data = 'google.com'
-
-output = dnsquery.gethostbyname_ex(dns_query_data)
-log(output)
-
+data()
