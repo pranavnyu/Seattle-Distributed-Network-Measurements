@@ -33,14 +33,34 @@
 dnscommon = dy_import_module("dnscommon.r2py")
 libsocket = dy_import_module("librepysocket.r2py")
 
-NAME_SERVER_IP= '8.8.8.8'
+listen_ip = ''
+listen_port = 0
 
-def dns_connection(client_ip,client_port,destip, destport ,dns_query_data):
+default_flags = {
+                 'communication_id': 'a7',
+                 'query_response': False,
+                 'operation_code': 0,
+                 'authority_advisory': False,
+                 'truncation': False,
+                 'recursion_desired': True,
+                 'recursion_accepted': False,
+                 'z': False,
+                 'authentic_data': False,
+                 'checking_disabled': False,
+                 'error_code': 0,
+                 'answer_count': 0,
+                 'authority_record_count': 0,
+                 'additional_record_count': 0,
+                 'answers': []
+                }
 
-  stat_dict = dnscommon.convert_packet_to_dictionary(dns_query_data)
-  log(stat_dict)
+checking_disabledcd
 
-  converted_packet = dnscommon.convert_dictionary_to_packet(stat_dict)
+def dns_connection(client_ip,client_port,destip, destport ,query_data):
+
+  log(query_data)
+  converted_packet = dnscommon.generate_packet(query_data, flags=default_flags)
+  log(converted_packet)
     
   sendmessage(desthost, destport, converted_packet, client_ip, client_port)
 
@@ -71,14 +91,22 @@ def _process_query(client_ip, client_port, converted_packet, commhandle):
   packet_dict['remote_port'] = client_port
   return packet_dict
 
+#create query_data as dictionary and then pass it to dns_connection 
 def gethostbyname_ex(dns_query_data):
+
   client_ip = getmyip()
   client_port = libsocket.get_messports(client_ip)[0]
-  destip = gethostbyname(dns_query_data)
-  destport = 80
-  #query_data = (destip, destport, NAME_SERVER_IP)
-  #log(query_data)
-  packet_dict = dns_connection(client_ip,client_port,destip, destport, destip)
+  
+  destip = listen_ip
+  destport = listen_port
+  
+  query_data = {}
+  query_data['name'] = dns_query_data
+  query_data['type'] = 'A'
+  query_data['class'] = 'IN'
+
+
+  packet_dict = dns_connection(client_ip,client_port,destip, destport, query_data)
   answers = packet_dict['answers']['answer_data']
   ans_address = []
   for item in range(answers):
