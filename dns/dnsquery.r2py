@@ -56,7 +56,6 @@ default_flags = {
 
 def dns_connection(client_ip,client_port,destip, destport ,query_data):
 
-  log(query_data)
   converted_packet = dnscommon.generate_packet(query_data, flags=default_flags)
   log(converted_packet)
     
@@ -97,12 +96,15 @@ def gethostbyname_ex(dns_query_data):
   
   destip = listen_ip
   destport = listen_port
+
+  name = gethostbyname(dns_query_data)
+  log(name)
   
   #query data needs to create a simple dictionary
   query_data = {}
-  query_data['name'] = dns_query_data
-  query_data['type'] = 'A'
-  query_data['class'] = 'IN'
+  query_data['name'] = name
+  query_data['type'] = '1'
+  query_data['class'] = '1'
 
 
   packet_dict = dns_connection(client_ip,client_port,destip, destport, query_data)
