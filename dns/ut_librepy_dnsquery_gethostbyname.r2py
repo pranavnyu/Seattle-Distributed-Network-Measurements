@@ -1,0 +1,8 @@
+#pragma repy restrictions.default dylink.r2py librepy.r2py
+
+def data():
+  dns_query_data = 'google.com'
+  output = gethostbyname_ex(dns_query_data)
+  log(output)
+
+data()
