@@ -28,13 +28,19 @@
 
   ------------
 """
+#ports used from https://developers.google.com/speed/public-dns/docs/security
+#http://www.firewall.cx/networking-topics/protocols/domain-name-system-dns/161-protocols-dns-response.html
+
 
 #imports dnscommon.r2py file from repyv2 library using dylink.r2py
 dnscommon = dy_import_module("dnscommon.r2py")
 libsocket = dy_import_module("librepysocket.r2py")
 
 listen_ip = '8.8.8.8'
-listen_port = 80
+listen_port = 53
+client_ip = getmyip()
+client_port = libsocket.get_messports(client_ip)[0]
+
 
 default_flags = {
                  'communication_id': 'a7',
@@ -56,62 +62,42 @@ default_flags = {
 
 def dns_connection(client_ip,client_port,destip, destport ,questions):
 
-  converted_packet = dnscommon.generate_packet(questions, flags=default_flags)
-  log(converted_packet)
-    
-  sent = libsocket.sendmess(destip, destport, converted_packet, client_ip, client_port)
-
-  new_dict = {}
+  packet_dict = {}
   response_string = ""
 
+  converted_packet = dnscommon.generate_packet(questions, flags=default_flags)
+
+  udpserversocket = listenformessage(client_ip, client_port)
+
+  sent = sendmessage(destip, destport, converted_packet, client_ip, client_port)
+
   try:
-    commhandle = libsocket.recvmess(client_port , _message_received, client_ip)
 
-    response_string = _message_received(client_ip, client_port, converted_packet,commhandle)
+    remote_ip, remote_port, response_string = udpserversocket.getmessage()
+    packet_dict = dnscommon.convert_packet_to_dictionary(response_string)
+  except SocketWouldBlockError:
+    #https://seattle.poly.edu/wiki/FutureRepyExceptions/SocketWouldBlockError
+    pass
+  except:
+    udpserversocket.close()
 
-    new_dict = dnscommon.convert_packet_to_dictionary(response_string)
-
-    commhandle()
-
-  finally:
-    return  new_dict
-
-def _message_received(client_ip, client_port, converted_packet, commhandle):
-
-  packet_dict = dnscommon.convert_packet_to_dictionary(converted_packet)
-
-  packet_dict['remote_ip'] = client_ip
-  packet_dict['remote_port'] = client_port
-
-  response_string = dnscommon.convert_dictionary_to_packet(packet_dict)
-  if response_string != None:
-    libsocket.sendmess(client_ip, client_port, response_string)
-
-  log(response_string)
-
-  
-
-  return response_string
+  return packet_dict
 
 #create query_data as dictionary and then pass it to dns_connection 
 def gethostbyname_ex(dns_query_data):
-
-  client_ip = getmyip()
-  client_port = libsocket.get_messports(client_ip)[0]
   
   destip = listen_ip
   destport = listen_port
 
-  name = gethostbyname(dns_query_data)
-  
   #query data needs to create a simple dictionary
-  questions = [{'name': name , 'type' : 'A', 'class': 'IN'}]
+  questions = [{'name': dns_query_data , 'type' : 'A', 'class': 'IN'}]
 
   packet_dict = dns_connection(client_ip,client_port,destip, destport, questions)
-  log(packet_dict)
+  '''
   answers = packet_dict['answers']['answer_data']
   ans_address = []
   for item in range(answers):
     ans_address.append(item)
   return ans_address
-  
+  '''
+  return packet_dict
