@@ -178,5 +178,5 @@ def gethostbyname_ex(dns_query_data):
   for answer in resource_data:
     add_list.append(answer['address'])
 
-  answer_dict = {'name' : dns_query_data ,'IP_LIST' : add_list}
+  answer_dict = (dns_query_data,add_list)
   return answer_dict
