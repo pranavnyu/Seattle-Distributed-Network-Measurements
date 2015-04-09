@@ -151,7 +151,8 @@ def gethostbyname_ex(dns_query_data):
     dns_query_data contains query name or IP address user wants
 
   <Exceptions>
-    None
+    KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
+     
 
   <Returns>
     A dictionary that contains the list of IPv4 addresses for the same interface on the same host. Its in form of 
@@ -175,8 +176,14 @@ def gethostbyname_ex(dns_query_data):
   add_list = []
   for item in answers:
     resource_data.append(item['answer_data'])
-  for answer in resource_data:
-    add_list.append(answer['address'])
+  try:
+    for answer in resource_data:
+      add_list.append(answer['address'])
+  except KeyError:
+    pass
 
-  answer_dict = (dns_query_data,add_list)
+  if not add_list:
+    answer_dict = None
+  else:
+    answer_dict = (dns_query_data,add_list)
   return answer_dict
