@@ -1,8 +1,13 @@
 #pragma repy restrictions.default dylink.r2py librepy.r2py
 
-def data():
-  dns_query_data = 'google.com'
-  output = gethostbyname_ex(dns_query_data)
-  log(output)
+def test_gethostbyname_ex(input):
+  output = gethostbyname_ex(input)
+  return output
 
-data()
+output = test_gethostbyname_ex('abcdefghij')
+if output != None:
+	log("sent wrong data")
+try:
+	output = test_gethostbyname_ex('23242938429','80')
+except TypeError:
+  pass
