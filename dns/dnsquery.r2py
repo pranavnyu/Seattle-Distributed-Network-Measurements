@@ -125,7 +125,7 @@ def dns_connection(client_ip,client_port,destip, destport ,questions):
   succeeded = False
   #generate packet from question that are asked by the user 
   converted_packet = dnscommon.generate_packet(questions, flags=default_flags)
-  #listens for uUDP messages
+  #listens for UDP messages
   udpserversocket = listenformessage(client_ip, client_port)
   #sends data to DNS
   sent = sendmessage(destip, destport, converted_packet, client_ip, client_port)
@@ -152,7 +152,7 @@ def gethostbyname_ex(dns_query_data):
 
   <Exceptions>
     KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
-     
+
 
   <Returns>
     A dictionary that contains the list of IPv4 addresses for the same interface on the same host. Its in form of 
@@ -187,3 +187,22 @@ def gethostbyname_ex(dns_query_data):
   else:
     answer_dict = (dns_query_data,add_list)
   return answer_dict
+
+def reverseLookup(dns_query_data):
+  querySplit = dns_query_data.split('.')
+  querySplit.reverse()
+  query = ''
+  for offset in querySplit:
+    query += offset+'.'
+  query +='in-addr.arpa'
+
+  destip = '128.122.253.103'
+  destport = 53
+
+  questions = questions = [{'name': query , 'type' : 'PTR', 'class': 'IN'}]
+  packet_dict = dns_connection(client_ip,client_port,destip,destport, questions)
+  log(packet_dict)
+
+  #code for fetching answers from dictionary will be here.
+
+  return packet_dict
