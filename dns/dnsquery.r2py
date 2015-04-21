@@ -165,7 +165,7 @@ def gethostbyname_ex(dns_query_data):
   
   destip = listen_ip
   destport = listen_port
-
+  
   #query data needs to create a simple dictionary
   questions = [{'name': dns_query_data , 'type' : 'A', 'class': 'IN'}]
   #calls dns_connection to get answers from DNS.
@@ -196,13 +196,18 @@ def reverseLookup(dns_query_data):
     query += offset+'.'
   query +='in-addr.arpa'
 
-  destip = '128.122.253.103'
+  #destip = '128.122.253.103' #nyu
+  destip = '192.168.1.1'  #home
   destport = 53
 
   questions = questions = [{'name': query , 'type' : 'PTR', 'class': 'IN'}]
   packet_dict = dns_connection(client_ip,client_port,destip,destport, questions)
-  log(packet_dict)
+  answers = packet_dict['answers']
+  resource_data = []
+  name_list = []
+  for item in answers:
+    resource_data.append(item['answer_data'])
 
   #code for fetching answers from dictionary will be here.
 
-  return packet_dict
+  return resource_data
