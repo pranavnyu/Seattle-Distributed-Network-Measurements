@@ -193,13 +193,13 @@ def reverseLookup(dns_query_data):
     query += offset+'.'
   query +='in-addr.arpa'
 
-  destip = '128.122.253.103' #nyu
+  #destip = '128.122.253.103' #nyu
   #destip = '192.168.1.1'  #home
   destport = 53
 
   ans_dict = gethostbyname('myresolver.zenodotus.poly.edu')
 
-  questions = [{'name': query , 'type' : 'PTR', 'class': 'IN'}]
+  questions = [{'name': query , 'type' : 'NS', 'class': 'IN'}]
   packet_dict = dns_connection(client_ip,client_port,ans_dict,destport, questions)
 
   answers = packet_dict['answers']
