@@ -207,8 +207,9 @@ def reverseLookup(dns_query_data):
   name_list = []
   for item in answers:
     resource_data.append(item['answer_data'])
-  log(resource_data)
-
-  #code for fetching answers from dictionary will be here.
-
+  for answer in resource_data:
+    rname = answer['rname']
+    mname = answer['mname']
+  answer = "Additional Section:" + "\n" + "rname:" + "\t" + rname + "\n"+"mname:" + "\t" + mname
+  
   return resource_data
