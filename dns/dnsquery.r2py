@@ -195,14 +195,13 @@ def reverseLookup(dns_query_data):
 
   #destip = '128.122.253.103' #nyu
   #destip = '192.168.1.1'  #home
-  destport = 53
 
   ans_dict = gethostbyname('myresolver.zenodotus.poly.edu')
 
-  questions = [{'name': query , 'type' : 'NS', 'class': 'IN'}]
-  packet_dict = dns_connection(client_ip,client_port,ans_dict,destport, questions)
-
+  questions = [{'name': query , 'type' : 'PTR', 'class': 'IN'}]
+  packet_dict = dns_connection(client_ip,client_port,ans_dict,listen_port, questions)
   answers = packet_dict['answers']
+  log(answers)
   resource_data = []
   name_list = []
   for item in answers:
@@ -211,5 +210,5 @@ def reverseLookup(dns_query_data):
     rname = answer['rname']
     mname = answer['mname']
   answer = "Additional Section:" + "\n" + "rname:" + "\t" + rname + "\n"+"mname:" + "\t" + mname
-  
+
   return resource_data
