@@ -133,6 +133,7 @@ def dns_connection(client_ip,client_port,destip, destport ,questions):
   while succeeded != True:
     try:
       remote_ip, remote_port, response_string = udpserversocket.getmessage()
+      log(response_string)
       packet_dict = dnscommon.convert_packet_to_dictionary(response_string)
       if packet_dict != None:
         succeeded = True
@@ -193,15 +194,25 @@ def reverseLookup(dns_query_data):
     query += offset+'.'
   query +='in-addr.arpa'
 
-  #destip = '128.122.253.103' #nyu
-  #destip = '192.168.1.1'  #home
-
-  ans_dict = gethostbyname('myresolver.zenodotus.poly.edu')
+  destip = gethostbyname('myresolver.zenodotus.poly.edu')
 
   questions = [{'name': query , 'type' : 'PTR', 'class': 'IN'}]
-  packet_dict = dns_connection(client_ip,client_port,ans_dict,listen_port, questions)
+  packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
   answers = packet_dict['answers']
-  log(answers)
+  resource_data = []
+  name_list = []
+  for item in answers:
+    resource_data.append(item['answer_data'])
+
+  return resource_data
+
+def namingServer(dns_query_data):
+
+  destip = gethostbyname('myresolver.zenodotus.poly.edu')
+
+  questions = [{'name': dns_query_data , 'type' : 'NS', 'class': 'IN'}]
+  packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
+  answers = packet_dict['answers']
   resource_data = []
   name_list = []
   for item in answers:
@@ -210,5 +221,7 @@ def reverseLookup(dns_query_data):
     rname = answer['rname']
     mname = answer['mname']
   answer = "Additional Section:" + "\n" + "rname:" + "\t" + rname + "\n"+"mname:" + "\t" + mname
+  log(answer)
+  return answer
 
-  return resource_data
+
