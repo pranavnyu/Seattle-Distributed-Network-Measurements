@@ -37,6 +37,7 @@ listen_ip = '8.8.8.8'
 listen_port = 53
 client_ip = getmyip()
 client_port = libsocket.get_messports(client_ip)[0]
+destip = gethostbyname('myresolver.zenodotus.poly.edu')
 
 
 default_flags = {
@@ -133,7 +134,7 @@ def dns_connection(client_ip,client_port,destip, destport ,questions):
   while succeeded != True:
     try:
       remote_ip, remote_port, response_string = udpserversocket.getmessage()
-      log(response_string)
+      #log(response_string)
       packet_dict = dnscommon.convert_packet_to_dictionary(response_string)
       if packet_dict != None:
         succeeded = True
@@ -172,9 +173,9 @@ def gethostbyname_ex(dns_query_data):
   answers = packet_dict['answers']
   resource_data = []
   add_list = []
-  for item in answers:
-    resource_data.append(item['answer_data'])
-  try:
+  try:  
+    for item in answers:
+      resource_data.append(item['answer_data'])
     for answer in resource_data:
       add_list.append(answer['address'])
   except KeyError:
@@ -194,34 +195,43 @@ def reverseLookup(dns_query_data):
     query += offset+'.'
   query +='in-addr.arpa'
 
-  destip = gethostbyname('myresolver.zenodotus.poly.edu')
-
   questions = [{'name': query , 'type' : 'PTR', 'class': 'IN'}]
   packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
   answers = packet_dict['answers']
   resource_data = []
   name_list = []
-  for item in answers:
-    resource_data.append(item['answer_data'])
-
-  return resource_data
+  try:
+    for item in answers:
+      resource_data.append(item['answer_data'])
+    domain = resource_data[0]
+  except KeyError:
+    pass
+  if domain == None:
+    answer_dict = None
+  else:
+    answer_dict = (dns_query_data,domain)
+  log(answer_dict)
+  return answer_dict
 
 def namingServer(dns_query_data):
-
-  destip = gethostbyname('myresolver.zenodotus.poly.edu')
 
   questions = [{'name': dns_query_data , 'type' : 'NS', 'class': 'IN'}]
   packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
   answers = packet_dict['answers']
   resource_data = []
   name_list = []
-  for item in answers:
-    resource_data.append(item['answer_data'])
-  for answer in resource_data:
-    rname = answer['rname']
-    mname = answer['mname']
-  answer = "Additional Section:" + "\n" + "rname:" + "\t" + rname + "\n"+"mname:" + "\t" + mname
-  log(answer)
-  return answer
+  try:
+    for item in answers:
+      resource_data.append(item['answer_data'])
+    for answer in resource_data:
+      name_list.append(answer['nameserver'])
+  except KeyError:
+    pass
+  if not name_list:
+    answer_dict = None
+  else:
+    answer_dict = (dns_query_data, name_list)
+  log(answer_dict)
+  return answer_dict
 
 
