@@ -234,4 +234,23 @@ def namingServer(dns_query_data):
   log(answer_dict)
   return answer_dict
 
+def recordsMX(dns_query_data):
 
+  questions = [{'name': dns_query_data , 'type' : 'MX', 'class': 'IN'}]
+  packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
+  answers = packet_dict['answers']
+  resource_data = []
+  record_list = []
+  try:
+    for item in answers:
+      resource_data.append(item['answer_data'])
+    for answer in resource_data:
+      record_list.append(answer['records'])
+  except KeyError:
+    pass
+  if not record_list:
+    answer_dict = None
+  else:
+    answer_dict = (dns_query_data, record_list)
+  log(answer_dict)
+  return answer_dict

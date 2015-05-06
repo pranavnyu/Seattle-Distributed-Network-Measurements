@@ -1,0 +1,9 @@
+#pragma repy restrictions.default dylink.r2py librepy.r2py
+
+dnsquery = dy_import_module("dnsquery.r2py")
+
+def test_recordsMX(input):
+  output = dnsquery.recordsMX(input)
+  return output
+
+test_recordsMX('facebook.com')
