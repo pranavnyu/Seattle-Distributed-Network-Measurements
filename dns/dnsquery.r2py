@@ -168,7 +168,7 @@ def gethostbyname_ex(dns_query_data):
   #query data needs to create a simple dictionary
   questions = [{'name': dns_query_data , 'type' : 'A', 'class': 'IN'}]
   #calls dns_connection to get answers from DNS.
-  packet_dict = dns_connection(client_ip,client_port,listen_ip, listen_port, questions)
+  packet_dict = dns_connection(client_ip,client_port,listen_ip,listen_port, questions)
   #fetches answers from packet_dictionary received
   answers = packet_dict['answers']
   resource_data = []
@@ -185,9 +185,29 @@ def gethostbyname_ex(dns_query_data):
     answer_dict = None
   else:
     answer_dict = (dns_query_data,add_list)
+  log(answer_dict)
   return answer_dict
 
 def reverseLookup(dns_query_data):
+  """
+  <Purpose>
+    Interrogate dns_query_data for reverse query i.e. gets a domain name for queried IPv4
+    address
+
+  <Arguments>
+    dns_query_data contains query name
+
+  <Exceptions>
+    KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
+
+  <Returns>
+    A dictionary that contains the domain name. Its in form of 
+    answer_dict{
+    'name' : dns_query_data
+    'answer_data' : name_list 
+    }
+
+  """
   querySplit = dns_query_data.split('.')
   querySplit.reverse()
   query = ''
@@ -214,6 +234,24 @@ def reverseLookup(dns_query_data):
   return answer_dict
 
 def namingServer(dns_query_data):
+  """
+  <Purpose>
+    Interrogate dns_query_data for Naming servers records
+
+  <Arguments>
+    dns_query_data contains query name
+
+  <Exceptions>
+    KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
+
+  <Returns>
+    A dictionary that contains the naming servers. Its in form of 
+    answer_dict{
+    'name' : dns_query_data
+    'answer_data' : name_list 
+    }
+
+  """
 
   questions = [{'name': dns_query_data , 'type' : 'NS', 'class': 'IN'}]
   packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
@@ -235,6 +273,24 @@ def namingServer(dns_query_data):
   return answer_dict
 
 def recordsMX(dns_query_data):
+  """
+  <Purpose>
+    Interrogate dns_query_data for MX records
+
+  <Arguments>
+    dns_query_data contains query name
+
+  <Exceptions>
+    KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
+
+  <Returns>
+    A dictionary that contains the MX records. Its in form of 
+    answer_dict{
+    'name' : dns_query_data
+    'answer_data' : record_list 
+    }
+
+  """
 
   questions = [{'name': dns_query_data , 'type' : 'MX', 'class': 'IN'}]
   packet_dict = dns_connection(client_ip,client_port,destip,listen_port, questions)
@@ -252,5 +308,48 @@ def recordsMX(dns_query_data):
     answer_dict = None
   else:
     answer_dict = (dns_query_data, record_list)
+  log(answer_dict)
+  return answer_dict
+
+def txtRecords(dns_query_data):
+  """
+  <Purpose>
+    Interrogate dns_query_data for TXT record
+
+  <Arguments>
+    dns_query_data contains query name
+
+  <Exceptions>
+    KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
+
+
+  <Returns>
+    A dictionary that contains the text data. Its in form of 
+    answer_dict{
+    'name' : dns_query_data
+    'answer_data' : text_data
+    }
+
+  """
+  
+  #query data needs to create a simple dictionary
+  questions = [{'name': dns_query_data , 'type' : 'TXT', 'class': 'IN'}]
+  #calls dns_connection to get answers from DNS.
+  packet_dict = dns_connection(client_ip,client_port,listen_ip,listen_port, questions)
+  #fetches answers from packet_dictionary received
+  answers = packet_dict['answers']
+  resource_data = []
+  text_data = []
+  try:  
+    for item in answers:
+      resource_data.append(item['answer_data'])
+    for answer in resource_data:
+      text_data.append(answer['text'])
+  except KeyError:
+    pass
+  if not text_data:
+    answer_dict = None
+  else:
+    answer_dict = (dns_query_data, text_data)
   log(answer_dict)
   return answer_dict

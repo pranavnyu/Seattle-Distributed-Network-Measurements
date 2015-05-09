@@ -1,0 +1,9 @@
+#pragma repy restrictions.default dylink.r2py
+
+dnsquery = dy_import_module("dnsquery.r2py")
+
+def data():
+  dns_query_data = 'google.com'
+  output = dnsquery.txtRecords(dns_query_data)
+
+data()
