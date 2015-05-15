@@ -1,6 +1,6 @@
 """
 <Program Name>
-  dnsquery.repy
+  dnsquery.r2py
 
 <Date Created>
   February 20, 2010
@@ -20,11 +20,12 @@
   Implement a function to query a name server for the INTERNET-class A record of a FQDN, 
   and return the reply in a `tuple`, as Python's `socket.gethostbyname_ex` does.
     
-  `dnsquery.gethostbyname_ex(name)`
-  Use `dnscommon` to construct the UDP datagram contents, 
-  and add code to your function to send the query and receive the reply. 
-  Write your code so as to use a global definition, NAME_SERVER_IP="8.8.8.8", 
-  which is the server to be queried per default. Compare your results with `dig @8.8.8.8 FQDN`.
+  'gethostbyname_ex(name)' - to get IPv4 address for given domain naime
+  'reverseLookup(address)' - to get the domain name for the given IPv4 address
+  'namingServer(name)' - to get the NS for the given domain name
+  'recordsMX(name)' - to get the MX records for the given domain name
+  'txtRecords(name)' - to get the TXT records for the given domain name
+  'getAAAA(name)' - to get the IPV6 address for the given domain name
 
   ------------
 """
@@ -37,7 +38,7 @@ listen_ip = '8.8.8.8'
 listen_port = 53
 client_ip = getmyip()
 client_port = libsocket.get_messports(client_ip)[0]
-destip = gethostbyname('myresolver.zenodotus.poly.edu')
+#destip = gethostbyname('myresolver.zenodotus.poly.edu')
 
 
 default_flags = {
@@ -134,7 +135,6 @@ def dns_connection(client_ip,client_port,destip, destport ,questions):
   while succeeded != True:
     try:
       remote_ip, remote_port, response_string = udpserversocket.getmessage()
-      #log(response_string)
       packet_dict = dnscommon.convert_packet_to_dictionary(response_string)
       if packet_dict != None:
         succeeded = True
@@ -180,12 +180,10 @@ def gethostbyname_ex(dns_query_data):
       add_list.append(answer['address'])
   except KeyError:
     pass
-
   if not add_list:
     answer_dict = None
   else:
     answer_dict = (dns_query_data,add_list)
-  log(answer_dict)
   return answer_dict
 
 def reverseLookup(dns_query_data):
@@ -230,7 +228,6 @@ def reverseLookup(dns_query_data):
     answer_dict = None
   else:
     answer_dict = (dns_query_data,domain)
-  log(answer_dict)
   return answer_dict
 
 def namingServer(dns_query_data):
@@ -269,7 +266,6 @@ def namingServer(dns_query_data):
     answer_dict = None
   else:
     answer_dict = (dns_query_data, name_list)
-  log(answer_dict)
   return answer_dict
 
 def recordsMX(dns_query_data):
@@ -308,7 +304,6 @@ def recordsMX(dns_query_data):
     answer_dict = None
   else:
     answer_dict = (dns_query_data, record_list)
-  log(answer_dict)
   return answer_dict
 
 def txtRecords(dns_query_data):
@@ -351,5 +346,46 @@ def txtRecords(dns_query_data):
     answer_dict = None
   else:
     answer_dict = (dns_query_data, text_data)
-  log(answer_dict)
+  return answer_dict
+
+def getAAAA(dns_query_data):
+  """
+  <Purpose>
+    Interrogate dns_query_data
+
+  <Arguments>
+    dns_query_data contains query name or IPv6 address user wants
+
+  <Exceptions>
+    KeyError if dns_query_data is not correct. If caught, it will pass and not show any result.
+
+
+  <Returns>
+    A dictionary that contains the list of IPv6 addresses for the same interface on the same host. Its in form of 
+    answer_dict{
+    'name' : dns_query_data
+    'answer_data' : IPv6 address
+    }
+
+  """
+  
+  #query data needs to create a simple dictionary
+  questions = [{'name': dns_query_data , 'type' : 'AAAA', 'class': 'IN'}]
+  #calls dns_connection to get answers from DNS.
+  packet_dict = dns_connection(client_ip,client_port,listen_ip,listen_port, questions)
+  #fetches answers from packet_dictionary received
+  answers = packet_dict['answers']
+  resource_data = []
+  add_list = []
+  try:  
+    for item in answers:
+      resource_data.append(item['answer_data'])
+    for answer in resource_data:
+      add_list.append(answer['address'])
+  except KeyError:
+    pass
+  if not add_list:
+    answer_dict = None
+  else:
+    answer_dict = (dns_query_data,add_list)
   return answer_dict
