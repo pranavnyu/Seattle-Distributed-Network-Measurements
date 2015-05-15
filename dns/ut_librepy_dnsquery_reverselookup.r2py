@@ -1,0 +1,11 @@
+"""
+This unit test checks for dnsquery.r2py functions working.
+"""
+
+#pragma repy restrictions.default dylink.r2py librepy.r2py
+
+#try multiple agrguments
+try:
+  output = reverseLookup('23242938429','80')
+except TypeError:
+  pass
