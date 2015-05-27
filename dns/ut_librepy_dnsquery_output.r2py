@@ -1,0 +1,44 @@
+"""
+This unit test checks for dnsquery.r2py functions working. 
+Following are the functions that has to be tested.
+
+'gethostbyname_ex(name)' - to get IPv4 address for given domain naime
+'reverseLookup(address)' - to get the domain name for the given IPv4 address
+'namingServer(name)' - to get the NS for the given domain name
+'recordsMX(name)' - to get the MX records for the given domain name
+'txtRecords(name)' - to get the TXT records for the given domain name
+'getAAAA(name)' - to get the IPV6 address for the given domain name
+
+"""
+
+#pragma repy restrictions.default dylink.r2py librepy.r2py
+
+#for function gethostbyname_ex(name)
+output = gethostbyname_ex('google.com')
+if output == None:
+  log("gethostbyname_ex function not running.")
+
+#for function reverseLookup(address)
+output = reverseLookup('')
+if output == None:
+  log("reverseLookup function not running.")
+
+#for function namingServer(name)
+output = namingServer('')
+if output == None:
+  log("namingServer function not running.")
+
+#for function recordsMX(name)
+output = recordsMX('')
+if output == None:
+  log("recordsMX function not running.")
+
+#for function txtRecords(name)
+output = txtRecords('')
+if output == None:
+  log("txtRecords function not running.")
+
+#for function getAAAA(name)
+output = getAAAA('')
+if output == None:
+  log("getAAAA function not running.")
