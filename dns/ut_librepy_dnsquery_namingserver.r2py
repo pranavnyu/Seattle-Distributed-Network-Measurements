@@ -40,4 +40,4 @@ sleep(1)
 #trying correct domain
 output = namingServer('nyu.edu')
 if output == None:
-	log('namingServer should return name servers')
+  log('namingServer should return name servers')
