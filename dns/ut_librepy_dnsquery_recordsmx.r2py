@@ -1,0 +1,43 @@
+"""
+This unit test checks for dnsquery.r2py function working. 
+Following are the functions that has to be tested.
+
+'recordsMX(name)' - to get the MX records for the given domain name
+
+"""
+#pragma repy restrictions.default dylink.r2py librepy.r2py
+
+#trying the empty domain
+output = recordsMX('')
+if output == None:
+  log("recordsMX should return SOA")
+
+sleep(1)
+#trying incorrect domain name
+output = recordsMX('nothingbutwrong')
+if output == None:
+  log('recordsMX should return SOA')
+
+sleep(1)
+#trying symbols
+output = recordsMX('!?&*')
+if output == None:
+  log('recordsMX should return SOA')
+
+sleep(1)  
+#trying incorrect domain name
+output = recordsMX('jasdbflasdf.com')
+if output == None:
+  log('recordsMX should return SOA')
+
+sleep(1)
+#tryin correct domain but without .com : this should return name servers
+output = recordsMX('google')
+if output == None:
+  log('recordsMX should return name servers')
+
+sleep(1)
+#trying correct domain
+output = recordsMX('nyu.edu')
+if output == None:
+	log('recordsMX should return name servers')

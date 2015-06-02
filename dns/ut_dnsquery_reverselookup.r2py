@@ -1,9 +1,0 @@
-#pragma repy restrictions.default dylink.r2py librepy.r2py
-
-dnsquery = dy_import_module("dnsquery.r2py")
-
-def test_reverseLookup(input):
-  output = dnsquery.reverseLookup(input)
-  return output
-
-test_reverseLookup('173.252.120.6')

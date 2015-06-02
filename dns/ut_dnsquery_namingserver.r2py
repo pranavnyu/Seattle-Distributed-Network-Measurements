@@ -1,9 +1,0 @@
-#pragma repy restrictions.default dylink.r2py librepy.r2py
-
-dnsquery = dy_import_module("dnsquery.r2py")
-
-def test_namingServer(input):
-  output = dnsquery.namingServer(input)
-  return output
-
-test_namingServer('google.com')

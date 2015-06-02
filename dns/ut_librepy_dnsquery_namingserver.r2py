@@ -1,0 +1,43 @@
+"""
+This unit test checks for dnsquery.r2py function working. 
+Following are the functions that has to be tested.
+
+'namingServer(name)' - to get the NS for the given domain name
+
+"""
+#pragma repy restrictions.default dylink.r2py librepy.r2py
+
+#trying the empty domain
+output = namingServer('')
+if output == None:
+  log("namingServer should return SOA")
+
+sleep(1)
+#trying incorrect domain name
+output = namingServer('nothingbutwrong')
+if output == None:
+  log('namingServer should return SOA')
+
+sleep(1)
+#trying symbols
+output = namingServer('!?&*')
+if output == None:
+  log('namingServer should return SOA')
+
+sleep(1)  
+#trying incorrect domain name
+output = namingServer('jasdbflasdf.com')
+if output == None:
+  log('namingServer should return SOA')
+
+sleep(1)
+#tryin correct domain but without .com : this should return name servers
+output = namingServer('google')
+if output == None:
+  log('namingServer should return name servers')
+
+sleep(1)
+#trying correct domain
+output = namingServer('nyu.edu')
+if output == None:
+	log('namingServer should return name servers')
