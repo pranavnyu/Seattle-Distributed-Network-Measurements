@@ -8,6 +8,6 @@ Following are the functions that has to be tested.
 #pragma repy restrictions.default dylink.r2py librepy.r2py dnsquery.r2py
 
 try:
-   output = gethostbyname_ex('sdfgsdfgdfgdfvadfbdafvdavd')
+  output = gethostbyname_ex('sdfgsdfgdfgdfvadfbdafvdavd')
 except NonExistentDomainError:
-	pass
+  pass
