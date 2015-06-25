@@ -5,43 +5,9 @@ Following are the functions that has to be tested.
 'gethostbyname_ex(name)' - to get IPv4 address for given domain name
 
 """
-#pragma repy restrictions.default dylink.r2py librepy.r2py
+#pragma repy restrictions.default dylink.r2py librepy.r2py dnsquery.r2py
 
-#trying the empty domain
-output = gethostbyname_ex('')
-if output == None:
-  log("gethostbyname_ex should return SOA")
-
-sleep(1)
-
-#trying incorrect domain name
-output = gethostbyname_ex('nothingbutwrong')
-if output == None:
-  log('gethostbyname_ex should return SOA')
-
-sleep(1)
-
-#trying symbols
-output = gethostbyname_ex('!?&*')
-if output == None:
-  log('gethostbyname_ex should return SOA')
-
-sleep(1)  
-
-#trying incorrect domain name
-output = gethostbyname_ex('jasdbflasdf.com')
-if output == None:
-  log('gethostbyname_ex should return SOA')
-
-sleep(1)
-
-#tryin correct domain but without .com : this should return address
-output = gethostbyname_ex('google')
-if output == None:
-  log('gethostbyname_ex should return address')
-
-sleep(1)
-#trying correct domain
-output = gethostbyname_ex('nyu.edu')
-if output == None:
-  log('gethostbyname_ex should return address')
+try:
+   output = gethostbyname_ex('sdfgsdfgdfgdfvadfbdafvdavd')
+except NonExistentDomainError:
+	pass
